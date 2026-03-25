@@ -6,19 +6,17 @@
 <tr><td align="center">
 <table width="700" cellpadding="0" cellspacing="0" style="max-width: 700px; background-color: #ffffff; padding: 30px 40px;">
 
-    <!-- Header: Company info + Logo -->
+    <!-- Header: Invoice title + status badge + Logo -->
     <tr><td>
         <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-            <td style="vertical-align: top;">
-                <span style="font-size: 28px; font-weight: bold; color: #4040bf; display: block; margin-bottom: 4px;">Riffle Square Cut</span>
-                <span style="font-size: 13px; color: #888; line-height: 1.6;">
-                    7433 Maynooth Dr<br>
-                    Dublin, OH 43017<br>
-                    (614) 809-6990
-                </span>
+            <td style="vertical-align: middle;">
+                <table cellpadding="0" cellspacing="0"><tr>
+                    <td style="vertical-align: middle;"><span style="font-size: 40px; font-weight: bold; color: #000; line-height: 1;">Invoice</span></td>
+                    <td style="vertical-align: middle; padding-left: 12px;"><span style="display: inline-block; padding: 3px 10px; font-size: 12px; font-weight: bold; color: #fff; border-radius: 3px; background-color: #e74c3c;">UNPAID</span></td>
+                </tr></table>
             </td>
-            <td style="text-align: right; vertical-align: top; width: 100px;">
+            <td style="text-align: right; vertical-align: middle; width: 100px;">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="-83 -89 166 180" width="74" height="80">
                     <polygon points="-74.23,-50 -10.60,-86.74 0,-80.62 -63.63,-43.88" fill="#000"/>
                     <polygon points="-42.42,-43.88 21.21,-80.62 31.81,-74.50 -31.82,-37.76" fill="#000"/>
@@ -49,15 +47,6 @@
     <!-- Spacer -->
     <tr><td style="height: 24px;"></td></tr>
 
-    <!-- Invoice title + submitted date -->
-    <tr><td>
-        <span style="font-size: 40px; font-weight: bold; color: #000; display: block;">Invoice</span>
-        <span style="font-size: 14px; color: #8b0000; display: block; margin-top: 2px;">Submitted on 03/21/2026</span>
-    </td></tr>
-
-    <!-- Spacer -->
-    <tr><td style="height: 24px;"></td></tr>
-
     <!-- Three-column info: Invoice for / Payable to / Invoice # -->
     <tr><td>
         <table width="100%" cellpadding="0" cellspacing="0">
@@ -73,7 +62,13 @@
             </td>
             <td style="vertical-align: top; width: 30%;">
                 <span style="font-size: 14px; font-weight: bold; color: #333; display: block; margin-bottom: 4px;">Payable to</span>
-                <span style="font-size: 13px; color: #555;">Riffle Square Cut</span>
+                <span style="font-size: 13px; color: #555; line-height: 1.5;">
+                    Andrei Roman<br>
+                    Riffle Square Cut<br>
+                    7433 Maynooth Dr<br>
+                    Dublin, OH 43017<br>
+                    (614) 809-6990
+                </span>
             </td>
             <td style="vertical-align: top; width: 30%;">
                 <span style="font-size: 14px; font-weight: bold; color: #333; display: block; margin-bottom: 4px;">Invoice #</span>
@@ -86,19 +81,14 @@
     <!-- Spacer -->
     <tr><td style="height: 12px;"></td></tr>
 
-    <!-- Project + Due date row -->
+    <!-- Date row -->
     <tr><td>
         <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-            <td style="vertical-align: top; width: 40%;">
-                &nbsp;
-            </td>
+            <td style="vertical-align: top; width: 40%;">&nbsp;</td>
+            <td style="vertical-align: top; width: 30%;">&nbsp;</td>
             <td style="vertical-align: top; width: 30%;">
-                <span style="font-size: 14px; font-weight: bold; color: #333; display: block; margin-bottom: 4px;">Project</span>
-                <span style="font-size: 13px; color: #555;">Hidden Marks Restock</span>
-            </td>
-            <td style="vertical-align: top; width: 30%;">
-                <span style="font-size: 14px; font-weight: bold; color: #333; display: block; margin-bottom: 4px;">Due date</span>
+                <span style="font-size: 14px; font-weight: bold; color: #333; display: block; margin-bottom: 4px;">Date</span>
                 <span style="font-size: 13px; color: #555;">04/20/2026</span>
             </td>
         </tr>

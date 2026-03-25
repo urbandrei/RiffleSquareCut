@@ -141,11 +141,16 @@ def _render_invoice_html(inv_data: dict, cust_data: dict, line_items_data: list[
             <td style="padding: 10px 10px; font-size: 13px; color: #333; text-align: right;">{total}</td>
         </tr>"""
 
-    # Payable to section (optional)
-    payable_to = inv_data.get("payable_to") or COMPANY_NAME
+    # Payable to section — full RSC company details
     payable_to_html = f"""
                 <span style="font-size: 14px; font-weight: bold; color: #333; display: block; margin-bottom: 4px;">Payable to</span>
-                <span style="font-size: 13px; color: #555;">{payable_to}</span>"""
+                <span style="font-size: 13px; color: #555; line-height: 1.5;">
+                    Andrei Roman<br>
+                    {COMPANY_NAME}<br>
+                    {COMPANY_ADDRESS}<br>
+                    {COMPANY_CITY_STATE_ZIP}<br>
+                    {COMPANY_PHONE}
+                </span>"""
 
     # Project row (optional)
     project_html = ""
@@ -184,32 +189,21 @@ def _render_invoice_html(inv_data: dict, cust_data: dict, line_items_data: list[
 <tr><td align="center">
 <table width="750" cellpadding="0" cellspacing="0" style="max-width: 750px; background-color: #ffffff; padding: 30px 50px;">
 
-    <!-- Header: Company info + Logo -->
+    <!-- Header: Invoice title + status badge + Logo -->
     <tr><td>
         <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-            <td style="vertical-align: top;">
-                <span style="font-size: 28px; font-weight: bold; color: #4040bf; display: block; margin-bottom: 4px;">{COMPANY_NAME}</span>
-                <span style="font-size: 13px; color: #888; line-height: 1.6;">
-                    {COMPANY_ADDRESS}<br>
-                    {COMPANY_CITY_STATE_ZIP}<br>
-                    {COMPANY_PHONE}
-                </span>
+            <td style="vertical-align: middle;">
+                <table cellpadding="0" cellspacing="0"><tr>
+                    <td style="vertical-align: middle;"><span style="font-size: 40px; font-weight: bold; color: #000; line-height: 1;">Invoice</span></td>
+                    <td style="vertical-align: middle; padding-left: 12px;"><span style="display: inline-block; padding: 3px 10px; font-size: 12px; font-weight: bold; color: #fff; border-radius: 3px; background-color: {'#2ecc71' if inv_data['status'] == 'paid' else '#e74c3c'};">{'PAID' if inv_data['status'] == 'paid' else 'UNPAID'}</span></td>
+                </tr></table>
             </td>
-            <td style="text-align: right; vertical-align: top; width: 100px;">
+            <td style="text-align: right; vertical-align: middle; width: 100px;">
                 {RSC_LOGO_SVG}
             </td>
         </tr>
         </table>
-    </td></tr>
-
-    <!-- Spacer -->
-    <tr><td style="height: 24px;"></td></tr>
-
-    <!-- Invoice title + submitted date -->
-    <tr><td>
-        <span style="font-size: 40px; font-weight: bold; color: #000; display: block;">Invoice</span>
-        <span style="font-size: 14px; color: #8b0000; display: block; margin-top: 2px;">Submitted on {issue_date_str}</span>
     </td></tr>
 
     <!-- Spacer -->
@@ -239,16 +233,14 @@ def _render_invoice_html(inv_data: dict, cust_data: dict, line_items_data: list[
     <!-- Spacer -->
     <tr><td style="height: 12px;"></td></tr>
 
-    <!-- Project + Due date row -->
+    <!-- Date row -->
     <tr><td>
         <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td style="vertical-align: top; width: 40%;">&nbsp;</td>
+            <td style="vertical-align: top; width: 30%;">&nbsp;</td>
             <td style="vertical-align: top; width: 30%;">
-                {project_html}
-            </td>
-            <td style="vertical-align: top; width: 30%;">
-                <span style="font-size: 14px; font-weight: bold; color: #333; display: block; margin-bottom: 4px;">Due date</span>
+                <span style="font-size: 14px; font-weight: bold; color: #333; display: block; margin-bottom: 4px;">Date</span>
                 <span style="font-size: 13px; color: #555;">{due_date_str}</span>
             </td>
         </tr>
