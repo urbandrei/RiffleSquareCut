@@ -62,6 +62,8 @@ def extract_line_items_data(line_items) -> list[dict]:
     ]
 
 
+CC_EMAIL = "andrei@rifflesquarecut.com"
+
 COMPANY_NAME = "Riffle Square Cut"
 COMPANY_ADDRESS = "7433 Maynooth Dr"
 COMPANY_CITY_STATE_ZIP = "Dublin, OH 43017"
@@ -124,16 +126,12 @@ def _render_invoice_html(inv_data: dict, cust_data: dict, line_items_data: list[
     issue_date_str = _format_date(inv_data.get("issue_date"))
     due_date_str = _format_date(inv_data.get("due_date"))
 
-    # Build line item rows, padded to 4 minimum
-    padded_items = list(line_items_data)
-    while len(padded_items) < 4:
-        padded_items.append({"description": "", "quantity": "", "unit_price": "", "line_total": 0})
-
+    # Build line item rows (only actual items, no padding)
     items_rows = ""
-    for item in padded_items:
-        desc = item["description"] or "&nbsp;"
-        qty = item["quantity"] if item["quantity"] != "" else "&nbsp;"
-        price = fmt(item["unit_price"]) if item["unit_price"] != "" else "&nbsp;"
+    for item in line_items_data:
+        desc = item["description"]
+        qty = item["quantity"]
+        price = fmt(item["unit_price"])
         total = fmt(item["line_total"])
         items_rows += f"""
         <tr style="background-color: #e8f0fe;">
@@ -175,11 +173,16 @@ def _render_invoice_html(inv_data: dict, cust_data: dict, line_items_data: list[
     html = f"""\
 <!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"></head>
+<head>
+<meta charset="utf-8">
+<style>
+  @page {{ size: letter; margin: 0.75in; }}
+</style>
+</head>
 <body style="margin: 0; padding: 0; background-color: #ffffff; font-family: Arial, Helvetica, sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #ffffff; padding: 20px 0;">
 <tr><td align="center">
-<table width="700" cellpadding="0" cellspacing="0" style="max-width: 700px; background-color: #ffffff; padding: 30px 40px;">
+<table width="750" cellpadding="0" cellspacing="0" style="max-width: 750px; background-color: #ffffff; padding: 30px 50px;">
 
     <!-- Header: Company info + Logo -->
     <tr><td>
@@ -350,6 +353,7 @@ async def send_invoice_email(inv_data: dict, cust_data: dict, line_items_data: l
         resend.Emails.send({
             "from": from_email,
             "to": [to_email],
+            "cc": [CC_EMAIL],
             "subject": subject,
             "html": html,
             "attachments": [

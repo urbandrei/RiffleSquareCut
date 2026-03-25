@@ -164,7 +164,7 @@ class InvoiceFlow(ConversationFlow):
                 line = InvoiceLineItem(
                     invoice_id=invoice.id,
                     product_id=product_id,
-                    description=f"Hidden Marks x{quantity}",
+                    description="Hidden Marks",
                     quantity=quantity,
                     unit_price=unit_price,
                     line_total=line_total,
