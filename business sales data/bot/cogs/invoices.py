@@ -21,6 +21,59 @@ from utils.email import (
 )
 
 
+class InvoiceActionView(discord.ui.View):
+    """Action buttons shown below an invoice: Resend Email, Fix Invoice, Details."""
+
+    def __init__(self, invoice_number: str, author_id: int, cog: "InvoicesCog"):
+        super().__init__(timeout=120)
+        self.invoice_number = invoice_number
+        self.author_id = author_id
+        self.cog = cog
+
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        if interaction.user.id != self.author_id:
+            await interaction.response.send_message("Not your invoice action.", ephemeral=True)
+            return False
+        return True
+
+    @discord.ui.button(label="Resend Email", style=discord.ButtonStyle.primary, emoji="\u2709")
+    async def resend_email(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer()
+        success = await self.cog._resend_invoice_email(interaction.channel, self.invoice_number)
+        if not success:
+            await interaction.channel.send(f"Failed to resend **{self.invoice_number}**. Check logs.")
+
+    @discord.ui.button(label="Fix Invoice", style=discord.ButtonStyle.danger)
+    async def fix_invoice(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.send_message(
+            f"Cancelling **{self.invoice_number}** and starting a new invoice..."
+        )
+        with get_session() as session:
+            inv = session.query(Invoice).filter_by(invoice_number=self.invoice_number).first()
+            if inv and inv.status != InvoiceStatus.cancelled:
+                inv.status = InvoiceStatus.cancelled
+        self.stop()
+        # Start new invoice flow — build a fake context from the interaction
+        ctx = await self.cog.bot.get_context(interaction.message)
+        ctx.author = interaction.user
+        ctx.channel = interaction.channel
+        flow = InvoiceFlow(ctx)
+        inv_id = await flow.run()
+        if inv_id is not None:
+            await self.cog._send_new_invoice_email(interaction.channel, inv_id)
+
+    @discord.ui.button(label="Details", style=discord.ButtonStyle.secondary)
+    async def details(self, interaction: discord.Interaction, button: discord.ui.Button):
+        with get_session() as session:
+            inv = session.query(Invoice).filter_by(invoice_number=self.invoice_number).first()
+            if not inv:
+                await interaction.response.send_message(f"Invoice **{self.invoice_number}** not found.", ephemeral=True)
+                return
+            cust = session.query(Customer).get(inv.customer_id)
+            embed = invoice_embed(inv, cust.business_name)
+        await interaction.response.send_message(embed=embed)
+
+
 class InvoiceSearchView(discord.ui.View):
     """Button menu for !invoice search options."""
 
@@ -73,6 +126,7 @@ class InvoiceSearchView(discord.ui.View):
                 color=COLOR_INFO,
             )
             await interaction.channel.send(embed=embed)
+            await self._prompt_invoice_selection(interaction.channel)
 
     @discord.ui.button(label="Recent", style=discord.ButtonStyle.secondary)
     async def recent(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -113,6 +167,28 @@ class InvoiceSearchView(discord.ui.View):
                 color=COLOR_INFO,
             )
             await interaction.channel.send(embed=embed)
+            await self._prompt_invoice_selection(interaction.channel)
+
+    async def _prompt_invoice_selection(self, channel):
+        """After showing a list, prompt user to pick an invoice for actions."""
+        await channel.send("Enter an invoice number for actions (or ignore to skip):")
+
+        def check(m):
+            return m.author.id == self.author_id and m.channel == channel
+
+        try:
+            msg = await self.cog.bot.wait_for("message", check=check, timeout=60)
+        except Exception:
+            return
+        number = msg.content.strip().upper()
+        with get_session() as session:
+            inv = session.query(Invoice).filter_by(invoice_number=number).first()
+            if not inv:
+                await channel.send(f"Invoice **{number}** not found.")
+                return
+            cust = session.query(Customer).get(inv.customer_id)
+            view = InvoiceActionView(number, self.author_id, self.cog)
+            await channel.send(embed=invoice_embed(inv, cust.business_name), view=view)
 
     @discord.ui.button(label="By Invoice #", style=discord.ButtonStyle.secondary)
     async def by_number(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -133,12 +209,60 @@ class InvoiceSearchView(discord.ui.View):
                 await interaction.channel.send(f"Invoice **{number}** not found.")
                 return
             cust = session.query(Customer).get(inv.customer_id)
-            await interaction.channel.send(embed=invoice_embed(inv, cust.business_name))
+            view = InvoiceActionView(number, self.author_id, self.cog)
+            await interaction.channel.send(embed=invoice_embed(inv, cust.business_name), view=view)
 
 
 class InvoicesCog(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+
+    async def _resend_invoice_email(self, channel, invoice_number: str) -> bool:
+        """Shared resend logic used by both the command and the action button."""
+        with get_session() as session:
+            inv = session.query(Invoice).filter_by(invoice_number=invoice_number).first()
+            if not inv:
+                await channel.send(f"Invoice **{invoice_number}** not found.")
+                return False
+            customer = session.query(Customer).get(inv.customer_id)
+            if not customer:
+                await channel.send("Customer not found for this invoice.")
+                return False
+            cust_data = extract_customer_data(customer)
+            inv_data = extract_invoice_data(inv)
+            li_data = extract_line_items_data(inv.line_items)
+
+        email_sent = await send_invoice_email(inv_data, cust_data, li_data)
+        if email_sent:
+            with get_session() as session:
+                inv = session.query(Invoice).get(inv_data["id"])
+                inv.email_sent_at = datetime.utcnow()
+            await channel.send(f"Invoice **{invoice_number}** resent to **{cust_data['email']}**")
+            return True
+        return False
+
+    async def _send_new_invoice_email(self, channel, inv_id: int):
+        """Send email for a newly created invoice (used after Fix Invoice flow)."""
+        with get_session() as session:
+            inv = session.query(Invoice).get(inv_id)
+            if not inv:
+                return
+            customer = session.query(Customer).get(inv.customer_id)
+            if not customer or not customer.email:
+                await channel.send("No customer email on file — invoice created but not emailed.")
+                return
+            inv_data = extract_invoice_data(inv)
+            cust_data = extract_customer_data(customer)
+            li_data = extract_line_items_data(inv.line_items)
+
+        email_sent = await send_invoice_email(inv_data, cust_data, li_data)
+        if email_sent:
+            with get_session() as session:
+                inv = session.query(Invoice).get(inv_id)
+                inv.email_sent_at = datetime.utcnow()
+            await channel.send(f"Invoice emailed to **{cust_data['email']}** with PDF attached.")
+        else:
+            await channel.send("Invoice created but email failed. Use `!resendinvoice` to retry.")
 
     @commands.command(name="newinvoice")
     async def new_invoice(self, ctx: commands.Context):
@@ -149,30 +273,15 @@ class InvoicesCog(commands.Cog):
         if inv_id is None:
             return
 
-        # Extract data in a fresh session for email
+        await self._send_new_invoice_email(ctx.channel, inv_id)
+
+        # Show the invoice with action buttons
         with get_session() as session:
             inv = session.query(Invoice).get(inv_id)
-            if not inv:
-                return
-            customer = session.query(Customer).get(inv.customer_id)
-            if not customer or not customer.email:
-                await ctx.send("No customer email on file — invoice created but not emailed.")
-                return
-
-            inv_data = extract_invoice_data(inv)
-            cust_data = extract_customer_data(customer)
-            li_data = extract_line_items_data(inv.line_items)
-
-        # Send email with PDF attachment
-        email_sent = await send_invoice_email(inv_data, cust_data, li_data)
-
-        if email_sent:
-            with get_session() as session:
-                inv = session.query(Invoice).get(inv_id)
-                inv.email_sent_at = datetime.utcnow()
-            await ctx.send(f"Invoice emailed to **{cust_data['email']}** with PDF attached.")
-        else:
-            await ctx.send("Invoice created but email failed. Use `!resendinvoice` to retry.")
+            if inv:
+                customer = session.query(Customer).get(inv.customer_id)
+                view = InvoiceActionView(inv.invoice_number, ctx.author.id, self)
+                await ctx.send(embed=invoice_embed(inv, customer.business_name), view=view)
 
     @commands.command(name="invoice")
     async def lookup_invoice(self, ctx: commands.Context, *, number: str = None):
@@ -186,7 +295,8 @@ class InvoicesCog(commands.Cog):
                     await ctx.send(f"Invoice **{number}** not found.")
                     return
                 customer = session.query(Customer).get(inv.customer_id)
-                await ctx.send(embed=invoice_embed(inv, customer.business_name))
+                view = InvoiceActionView(number, ctx.author.id, self)
+                await ctx.send(embed=invoice_embed(inv, customer.business_name), view=view)
             return
 
         # Show search menu with buttons
@@ -273,48 +383,8 @@ class InvoicesCog(commands.Cog):
     async def resend_invoice(self, ctx: commands.Context, *, number: str):
         """Resend an invoice email. Usage: !resendinvoice RSC-YYYY-NNNN"""
         number = number.strip().upper()
-        with get_session() as session:
-            inv = session.query(Invoice).filter_by(invoice_number=number).first()
-            if not inv:
-                await ctx.send(f"Invoice **{number}** not found.")
-                return
-            customer = session.query(Customer).get(inv.customer_id)
-            if not customer:
-                await ctx.send("Customer not found for this invoice.")
-                return
-
-            cust_data = extract_customer_data(customer)
-            inv_data = extract_invoice_data(inv)
-            li_data = extract_line_items_data(inv.line_items)
-            last_sent = inv.email_sent_at
-
-        last_sent_str = str(last_sent) if last_sent else "Never"
-
-        # Confirmation prompt
-        view = ConfirmView(ctx.author.id)
-        msg = await ctx.send(
-            f"Resend invoice **{number}** to **{cust_data['email']}**?\n"
-            f"Last sent: {last_sent_str}",
-            view=view,
-        )
-        view.message = msg
-
-        try:
-            confirmed = await view.result
-        except Exception:
-            return
-
-        if not confirmed:
-            await ctx.send("Resend cancelled.")
-            return
-
-        email_sent = await send_invoice_email(inv_data, cust_data, li_data)
-        if email_sent:
-            with get_session() as session:
-                inv = session.query(Invoice).get(inv_data["id"])
-                inv.email_sent_at = datetime.utcnow()
-            await ctx.send(f"Invoice **{number}** resent to **{cust_data['email']}**")
-        else:
+        success = await self._resend_invoice_email(ctx.channel, number)
+        if not success:
             await ctx.send(f"Failed to send invoice **{number}**. Check logs.")
 
 
