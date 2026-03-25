@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-83 -89 166 180" width="74" height="80">
+
+  <!-- TOP FACE: offset diagonal stripes (shape 1) -->
+  <!-- Face: T(0,-92.86) R(74.23,-50) F(0,-7.14) L(-74.23,-50) -->
+  <!-- Stripes parallel to T->R / L->F edges, offset alternating -->
+  <!-- Band 0: left-justified (s=0 to 6/7) -->
+  <polygon points="-74.23,-50 -10.60,-86.74 0,-80.62 -63.63,-43.88" fill="#000"/>
+  <!-- Band 2: right-justified (s=1/7 to 1) -->
+  <polygon points="-42.42,-43.88 21.21,-80.62 31.81,-74.50 -31.82,-37.76" fill="#000"/>
+  <!-- Band 4: left-justified -->
+  <polygon points="-31.81,-25.51 31.82,-62.25 42.42,-56.12 -21.21,-19.38" fill="#000"/>
+  <!-- Band 6: right-justified -->
+  <polygon points="0,-19.38 63.63,-56.12 74.23,-50 10.60,-13.26" fill="#000"/>
+
+  <!-- LEFT FACE: full horizontal stripes (shape 2), rotated 60° left -->
+  <g transform="translate(43.30, 75.00) rotate(-60, -43.30, -25.00) translate(0,-50) scale(1,-1) translate(0,50) rotate(-60, -43.30, -25.00)">
+    <polygon points="-6.19,-3.57 -80.41,39.29 -80.41,27.04 -6.19,-15.82" fill="#000"/>
+    <polygon points="-6.19,-28.06 -80.41,14.80 -80.41,2.56 -6.19,-40.31" fill="#000"/>
+    <polygon points="-6.19,-52.56 -80.41,-9.69 -80.41,-21.93 -6.19,-64.80" fill="#000"/>
+    <polygon points="-6.19,-77.05 -80.41,-34.18 -80.41,-46.43 -6.19,-89.29" fill="#000"/>
+  </g>
+
+  <!-- RIGHT FACE: split vertical stripes (shape 3), rotated 60° right -->
+  <g transform="translate(-43.30, 75.00) rotate(60, 43.30, -25.00) translate(0,-50) scale(1,-1) translate(0,50) rotate(60, 43.30, -25.00)">
+    <polygon points="6.19,-89.29 16.79,-83.17 16.79,-46.44 6.19,-52.56" fill="#000"/>
+    <polygon points="6.19,-40.31 16.79,-34.19 16.79,2.55 6.19,-3.57" fill="#000"/>
+    <polygon points="27.39,-77.05 37.99,-70.93 37.99,-34.20 27.39,-40.32" fill="#000"/>
+    <polygon points="27.39,-28.07 37.99,-21.95 37.99,14.79 27.39,8.67" fill="#000"/>
+    <polygon points="48.59,-64.81 59.19,-58.69 59.19,-21.96 48.59,-28.08" fill="#000"/>
+    <polygon points="48.59,-15.83 59.19,-9.71 59.19,27.03 48.59,20.91" fill="#000"/>
+    <polygon points="69.79,-52.57 80.41,-46.43 80.41,-9.72 69.79,-15.84" fill="#000"/>
+    <polygon points="69.79,-3.59 80.41,2.53 80.41,39.29 69.79,33.15" fill="#000"/>
+  </g>
+</svg>

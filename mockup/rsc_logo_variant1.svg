@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -10 348.57 120" width="240" height="80">
+  <defs>
+    <clipPath id="sq1">
+      <rect x="0" y="0" width="100" height="100"/>
+    </clipPath>
+    <clipPath id="sq2">
+      <rect x="114.29" y="0" width="100" height="100"/>
+    </clipPath>
+    <clipPath id="sq3">
+      <rect x="228.57" y="0" width="100" height="100"/>
+    </clipPath>
+  </defs>
+  <rect x="-10" y="-10" width="348.57" height="120" fill="#fff"/>
+  <!-- Square 1 -->
+  <g clip-path="url(#sq1)">
+    <rect x="0" y="0" width="85.71" height="14.29" fill="#000"/>
+    <rect x="14.29" y="28.57" width="85.71" height="14.29" fill="#000"/>
+    <rect x="0" y="57.14" width="85.71" height="14.29" fill="#000"/>
+    <rect x="14.29" y="85.71" width="85.71" height="14.29" fill="#000"/>
+  </g>
+  <!-- Square 2 (rotated 90°) -->
+  <g clip-path="url(#sq2)">
+    <g transform="rotate(90, 164.29, 50)">
+      <rect x="114.29" y="0" width="100" height="14.29" fill="#000"/>
+      <rect x="114.29" y="28.57" width="100" height="14.29" fill="#000"/>
+      <rect x="114.29" y="57.14" width="100" height="14.29" fill="#000"/>
+      <rect x="114.29" y="85.71" width="100" height="14.29" fill="#000"/>
+    </g>
+  </g>
+  <!-- Square 3 -->
+  <g clip-path="url(#sq3)">
+    <rect x="228.57" y="0" width="42.86" height="14.29" fill="#000"/>
+    <rect x="285.72" y="0" width="42.86" height="14.29" fill="#000"/>
+    <rect x="228.57" y="28.57" width="42.86" height="14.29" fill="#000"/>
+    <rect x="285.72" y="28.57" width="42.86" height="14.29" fill="#000"/>
+    <rect x="228.57" y="57.14" width="42.86" height="14.29" fill="#000"/>
+    <rect x="285.72" y="57.14" width="42.86" height="14.29" fill="#000"/>
+    <rect x="228.57" y="85.71" width="42.86" height="14.29" fill="#000"/>
+    <rect x="285.72" y="85.71" width="42.86" height="14.29" fill="#000"/>
+  </g>
+</svg>

@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSC Style Guide — Riffle Square Cut</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CSS CUSTOM PROPERTIES — DESIGN TOKENS
+   ============================================================ */
+:root {
+  /* Backgrounds */
+  --bg-base: #0a0a0f;
+  --bg-elevated: #121218;
+  --bg-surface: #1a1a24;
+  --bg-panel: #151c3c;
+
+  /* Brand Colors */
+  --red: #EF3B38;
+  --blue: #4EC8ED;
+
+  /* Functional */
+  --success: #00FF41;
+  --warning: #FFBF00;
+  --danger: #ff1744;
+  --info: #4EC8ED;
+
+  /* Text */
+  --text-primary: #e0e0e0;
+  --text-secondary: #71797E;
+  --text-muted: #3a3a48;
+  --text-micro: #2a2a35;
+
+  /* Industrial */
+  --metal: #71797E;
+  --metal-dark: #48494B;
+  --rust: #8B4513;
+  --hazard-yellow: #FFD700;
+
+  /* Fonts */
+  --font-display: 'Rajdhani', sans-serif;
+  --font-ui: 'Barlow Condensed', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 32px;
+  --space-xl: 64px;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   STYLE GUIDE LAYOUT
+   ============================================================ */
+.sg-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+}
+.sg-header {
+  text-align: center;
+  padding: var(--space-xl) 0;
+  border-bottom: 1px solid var(--text-muted);
+  margin-bottom: var(--space-xl);
+  position: relative;
+}
+.sg-header::before {
+  content: 'RSC//STYLE_GUIDE//v1.0';
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  display: block;
+  margin-bottom: var(--space-md);
+}
+.sg-header h1 {
+  font-family: var(--font-display);
+  font-size: 72px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  line-height: 1;
+  margin-bottom: var(--space-sm);
+}
+.sg-header h1 span { color: var(--red); }
+.sg-header p {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.sg-section {
+  margin-bottom: 80px;
+  padding-top: 40px;
+  border-top: 1px solid var(--text-muted);
+}
+.sg-section-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: var(--space-xs);
+}
+.sg-section-title {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: var(--space-lg);
+}
+.sg-description {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin-bottom: var(--space-lg);
+  line-height: 1.8;
+}
+
+.sg-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-lg);
+}
+.sg-col { flex: 1; min-width: 250px; }
+
+.sg-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: var(--space-sm);
+  display: block;
+}
+
+/* ============================================================
+   NAV — TABLE OF CONTENTS
+   ============================================================ */
+.sg-nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100vh;
+  background: var(--bg-elevated);
+  border-right: 1px solid var(--text-muted);
+  padding: var(--space-lg) var(--space-md);
+  overflow-y: auto;
+  z-index: 100;
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.sg-nav-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--red);
+  margin-bottom: var(--space-lg);
+}
+.sg-nav a {
+  display: block;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 6px 0;
+  transition: color 0.2s;
+  letter-spacing: 0.5px;
+}
+.sg-nav a:hover { color: var(--blue); }
+.sg-nav a::before {
+  content: '> ';
+  color: var(--text-muted);
+}
+.sg-main {
+  margin-left: 220px;
+}
+
+@media (max-width: 900px) {
+  .sg-nav { display: none; }
+  .sg-main { margin-left: 0; }
+}
+
+/* ============================================================
+   1. COLOR PALETTE
+   ============================================================ */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-md);
+}
+.color-swatch {
+  border: 1px solid var(--text-muted);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.color-swatch-block {
+  height: 100px;
+  position: relative;
+}
+.color-swatch-block::after {
+  content: attr(data-contrast);
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(255,255,255,0.5);
+}
+.color-swatch-info {
+  padding: 12px;
+  background: var(--bg-elevated);
+}
+.color-swatch-name {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.color-swatch-hex {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.color-swatch-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ============================================================
+   2. TYPOGRAPHY
+   ============================================================ */
+.type-specimen {
+  padding: var(--space-lg);
+  background: var(--bg-elevated);
+  border: 1px solid var(--text-muted);
+  margin-bottom: var(--space-md);
+  position: relative;
+}
+.type-specimen::before {
+  content: attr(data-font);
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.type-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 64px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  line-height: 1.1;
+}
+.type-ui {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 28px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.type-body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.8;
+  max-width: 600px;
+}
+.type-mono {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1.6;
+}
+.type-mono-sm {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.type-micro {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.type-scale {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+.type-scale-item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+}
+.type-scale-item .size {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  min-width: 60px;
+  text-align: right;
+}
+.type-weight-row {
+  display: flex;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+  margin-top: var(--space-md);
+}
+.type-weight-row span {
+  font-family: var(--font-display);
+  font-size: 32px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   3. BUTTONS & CTAs
+   ============================================================ */
+.button-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+/* Industrial Label Button — Primary CTA */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 14px 28px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+/* Primary — Red industrial label */
+.btn-primary {
+  background: var(--red);
+  color: #fff;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--red);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.btn-primary:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(239, 59, 56, 0.4);
+}
+.btn-primary:hover::before { opacity: 1; }
+
+/* Secondary — Blue outline */
+.btn-secondary {
+  background: transparent;
+  color: var(--blue);
+  border: 2px solid var(--blue);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+.btn-secondary:hover {
+  background: rgba(78, 200, 237, 0.1);
+  box-shadow: 0 0 20px rgba(78, 200, 237, 0.2);
+  transform: scale(1.03);
+}
+
+/* Ghost — Subtle */
+.btn-ghost {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--text-muted);
+}
+.btn-ghost:hover {
+  border-color: var(--text-secondary);
+  background: rgba(255,255,255,0.03);
+}
+
+/* Small variant */
+.btn-sm {
+  font-size: 11px;
+  padding: 8px 16px;
+  letter-spacing: 1.5px;
+}
+
+/* Industrial warning stripe button */
+.btn-hazard {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--red),
+    var(--red) 10px,
+    #1a1a24 10px,
+    #1a1a24 20px
+  );
+  color: #fff;
+  font-size: 12px;
+  padding: 12px 24px;
+  border: 2px solid var(--red);
+}
+.btn-hazard:hover {
+  box-shadow: 0 0 30px rgba(239, 59, 56, 0.5);
+}
+
+/* ============================================================
+   4. CARDS & PANELS
+   ============================================================ */
+.panel {
+  background: var(--bg-elevated);
+  border: 1px solid var(--text-muted);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Corner rivets */
+.panel-riveted::before,
+.panel-riveted::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--metal), var(--metal-dark));
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.15);
+  z-index: 2;
+}
+.panel-riveted::before { top: 8px; left: 8px; }
+.panel-riveted::after { top: 8px; right: 8px; }
+.panel-riveted .rivet-bl,
+.panel-riveted .rivet-br {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--metal), var(--metal-dark));
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.15);
+  z-index: 2;
+}
+.panel-riveted .rivet-bl { bottom: 8px; left: 8px; }
+.panel-riveted .rivet-br { bottom: 8px; right: 8px; }
+
+/* HUD bracket frame */
+.panel-hud {
+  position: relative;
+}
+.panel-hud::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 20px; height: 20px;
+  border-top: 2px solid var(--blue);
+  border-left: 2px solid var(--blue);
+  z-index: 2;
+}
+.panel-hud::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 20px; height: 20px;
+  border-bottom: 2px solid var(--blue);
+  border-right: 2px solid var(--blue);
+  z-index: 2;
+}
+
+/* Product card */
+.product-card {
+  width: 280px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--text-muted);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  cursor: pointer;
+}
+.product-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 40px rgba(78, 200, 237, 0.15);
+  border-color: var(--blue);
+}
+.product-card-image {
+  height: 320px;
+  background: var(--bg-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.product-card-image::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 16px; height: 16px;
+  border-top: 2px solid var(--blue);
+  border-left: 2px solid var(--blue);
+}
+.product-card-image::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 16px; height: 16px;
+  border-bottom: 2px solid var(--blue);
+  border-right: 2px solid var(--blue);
+}
+.product-card-image .card-placeholder {
+  width: 120px;
+  height: 170px;
+  background: linear-gradient(135deg, var(--bg-base), var(--bg-panel));
+  border: 1px solid var(--text-muted);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--red);
+  transform: rotate(-5deg);
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.3);
+}
+.product-card-body {
+  padding: 16px;
+  border-top: 1px solid var(--text-muted);
+}
+.product-card-body .micro-border {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.product-card-body h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.product-card-body .price {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--blue);
+  font-weight: 500;
+}
+.product-card-body .price .currency {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   5. MICROGRAPHICS
+   ============================================================ */
+.micro-demo {
+  background: var(--bg-elevated);
+  border: 1px solid var(--text-muted);
+  padding: var(--space-lg);
+  position: relative;
+  overflow: hidden;
+}
+.micro-text {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  user-select: none;
+}
+.micro-text.blue { color: rgba(78, 200, 237, 0.2); }
+.micro-text.red { color: rgba(239, 59, 56, 0.2); }
+
+.micro-border-demo {
+  padding: var(--space-lg);
+  position: relative;
+  background: var(--bg-elevated);
+}
+.micro-border-demo::before {
+  content: 'RFL-2026-0042 // BATCH//07A // HIDDEN_MARKS™ // DECK::ALPHA // AUTH::VERIFIED // LOT#HM-0901 // RFL-2026-0042 // BATCH//07A';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  border-bottom: 1px solid var(--text-muted);
+}
+.micro-border-demo::after {
+  content: 'SEC//PRINT::ACTIVE // GUILLOCHE_PATTERN_REF::GP-4420 // AUTHENTICITY::CONFIRMED // SERIAL::HM-2026-X0042-A7';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  padding: 4px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  border-top: 1px solid var(--text-muted);
+}
+
+/* Guilloche pattern (CSS approximation) */
+.guilloche {
+  width: 100%;
+  height: 80px;
+  background:
+    repeating-conic-gradient(
+      from 0deg at 50% 50%,
+      transparent 0deg,
+      rgba(78, 200, 237, 0.03) 1deg,
+      transparent 2deg
+    ),
+    repeating-conic-gradient(
+      from 45deg at 40% 50%,
+      transparent 0deg,
+      rgba(239, 59, 56, 0.03) 1deg,
+      transparent 2deg
+    );
+  border: 1px solid var(--text-muted);
+}
+
+/* Serial number badge */
+.auth-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  position: relative;
+}
+.auth-badge::before {
+  content: '◆';
+  color: var(--success);
+  font-size: 8px;
+}
+.auth-badge .serial {
+  color: var(--text-muted);
+  font-size: 8px;
+}
+
+/* Crosshair registration mark */
+.crosshair {
+  width: 24px;
+  height: 24px;
+  position: relative;
+}
+.crosshair::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--text-muted);
+}
+.crosshair::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--text-muted);
+}
+
+/* ============================================================
+   6. HUD ELEMENTS
+   ============================================================ */
+.hud-nav-demo {
+  background: rgba(10, 10, 15, 0.95);
+  border: 1px solid var(--text-muted);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+.hud-nav-demo::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+}
+.hud-logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hud-logo .cube {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--text-primary);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hud-logo .cube::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: var(--red);
+}
+.hud-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+.hud-links li a {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+  position: relative;
+}
+.hud-links li a:hover { color: var(--blue); }
+.hud-links li a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--blue);
+  transform: scaleX(0);
+  transition: transform 0.2s;
+}
+.hud-links li a:hover::after { transform: scaleX(1); }
+.hud-status {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hud-status .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Corner bracket overlay */
+.hud-bracket {
+  position: relative;
+  padding: var(--space-lg);
+  display: inline-block;
+}
+.hud-bracket::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 24px; height: 24px;
+  border-top: 2px solid var(--blue);
+  border-left: 2px solid var(--blue);
+}
+.hud-bracket::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 24px; height: 24px;
+  border-top: 2px solid var(--blue);
+  border-right: 2px solid var(--blue);
+}
+.hud-bracket .bracket-bl {
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 24px; height: 24px;
+  border-bottom: 2px solid var(--blue);
+  border-left: 2px solid var(--blue);
+}
+.hud-bracket .bracket-br {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 24px; height: 24px;
+  border-bottom: 2px solid var(--blue);
+  border-right: 2px solid var(--blue);
+}
+
+/* Status indicators */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.status-dot.green { background: var(--success); box-shadow: 0 0 6px var(--success); }
+.status-dot.amber { background: var(--warning); box-shadow: 0 0 6px var(--warning); }
+.status-dot.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+
+/* ============================================================
+   7. INDUSTRIAL LABELS
+   ============================================================ */
+.industrial-label {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 4px 12px;
+  border: 1px solid;
+}
+.industrial-label.caution {
+  color: var(--hazard-yellow);
+  border-color: var(--hazard-yellow);
+  background: rgba(255, 215, 0, 0.05);
+}
+.industrial-label.danger {
+  color: var(--red);
+  border-color: var(--red);
+  background: rgba(239, 59, 56, 0.05);
+}
+.industrial-label.info {
+  color: var(--blue);
+  border-color: var(--blue);
+  background: rgba(78, 200, 237, 0.05);
+}
+.industrial-label.verified {
+  color: var(--success);
+  border-color: var(--success);
+  background: rgba(0, 255, 65, 0.05);
+}
+
+/* Warning stripe bar */
+.warning-stripe {
+  height: 8px;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--hazard-yellow),
+    var(--hazard-yellow) 8px,
+    var(--bg-base) 8px,
+    var(--bg-base) 16px
+  );
+}
+.warning-stripe.red {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--red),
+    var(--red) 8px,
+    var(--bg-base) 8px,
+    var(--bg-base) 16px
+  );
+}
+
+/* Stencil badge */
+.stencil-badge {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--red);
+  border: 3px solid var(--red);
+  padding: 8px 20px;
+  transform: rotate(-5deg);
+  position: relative;
+  opacity: 0.85;
+}
+.stencil-badge::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 1px solid var(--red);
+  opacity: 0.3;
+}
+
+/* ============================================================
+   8. EFFECTS
+   ============================================================ */
+
+/* Scanline overlay */
+.scanline-demo {
+  position: relative;
+  padding: var(--space-lg);
+  background: var(--bg-elevated);
+  border: 1px solid var(--text-muted);
+}
+.scanline-demo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+}
+
+/* Glitch text effect */
+.glitch {
+  position: relative;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 48px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+}
+.glitch::before {
+  color: var(--blue);
+  z-index: -1;
+  animation: glitch-1 3s infinite linear alternate-reverse;
+}
+.glitch::after {
+  color: var(--red);
+  z-index: -2;
+  animation: glitch-2 2s infinite linear alternate-reverse;
+}
+@keyframes glitch-1 {
+  0% { clip-path: inset(40% 0 61% 0); transform: translate(-2px, 0); }
+  20% { clip-path: inset(92% 0 1% 0); transform: translate(2px, 0); }
+  40% { clip-path: inset(43% 0 1% 0); transform: translate(-1px, 0); }
+  60% { clip-path: inset(25% 0 58% 0); transform: translate(1px, 0); }
+  80% { clip-path: inset(54% 0 7% 0); transform: translate(-2px, 0); }
+  100% { clip-path: inset(58% 0 43% 0); transform: translate(0); }
+}
+@keyframes glitch-2 {
+  0% { clip-path: inset(65% 0 13% 0); transform: translate(2px, 0); }
+  20% { clip-path: inset(79% 0 14% 0); transform: translate(-2px, 0); }
+  40% { clip-path: inset(48% 0 26% 0); transform: translate(1px, 0); }
+  60% { clip-path: inset(70% 0 10% 0); transform: translate(-1px, 0); }
+  80% { clip-path: inset(15% 0 65% 0); transform: translate(2px, 0); }
+  100% { clip-path: inset(32% 0 52% 0); transform: translate(0); }
+}
+
+/* Neon glow text */
+.neon-red {
+  color: var(--red);
+  text-shadow: 0 0 7px var(--red), 0 0 10px var(--red), 0 0 21px var(--red), 0 0 42px var(--red);
+}
+.neon-blue {
+  color: var(--blue);
+  text-shadow: 0 0 7px var(--blue), 0 0 10px var(--blue), 0 0 21px var(--blue), 0 0 42px var(--blue);
+}
+
+/* Neon glow border */
+.neon-border-red {
+  border: 1px solid var(--red);
+  box-shadow: 0 0 5px var(--red), inset 0 0 5px rgba(239, 59, 56, 0.1);
+}
+.neon-border-blue {
+  border: 1px solid var(--blue);
+  box-shadow: 0 0 5px var(--blue), inset 0 0 5px rgba(78, 200, 237, 0.1);
+}
+
+/* Noise overlay texture */
+.noise-demo {
+  position: relative;
+  padding: var(--space-lg);
+  background: var(--bg-elevated);
+  border: 1px solid var(--text-muted);
+}
+.noise-demo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* ============================================================
+   9. FORM ELEMENTS
+   ============================================================ */
+.form-group {
+  margin-bottom: var(--space-md);
+}
+.form-label {
+  display: block;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.form-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--text-muted);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px rgba(78, 200, 237, 0.15);
+}
+.form-input::placeholder {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.form-input.error {
+  border-color: var(--red);
+  box-shadow: 0 0 0 2px rgba(239, 59, 56, 0.15);
+}
+.form-hint {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.form-hint.error { color: var(--red); }
+
+/* Select */
+.form-select {
+  appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2371797E' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+/* ============================================================
+   10. TERMINAL FOOTER
+   ============================================================ */
+.terminal-footer {
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--text-muted);
+  padding: 8px 24px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+.terminal-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
+}
+.terminal-footer .prompt {
+  color: var(--success);
+}
+
+/* ============================================================
+   11. LOADING / SKELETON
+   ============================================================ */
+.skeleton {
+  background: var(--bg-surface);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+  animation: skeleton-shimmer 1.5s infinite;
+}
+@keyframes skeleton-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.skeleton-line {
+  height: 12px;
+  margin-bottom: 8px;
+}
+.skeleton-line.w75 { width: 75%; }
+.skeleton-line.w50 { width: 50%; }
+.skeleton-line.w90 { width: 90%; }
+.skeleton-block { height: 200px; }
+
+/* Glitch loading bar */
+.glitch-loader {
+  width: 100%;
+  height: 3px;
+  background: var(--bg-surface);
+  position: relative;
+  overflow: hidden;
+}
+.glitch-loader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, var(--red), var(--blue));
+  animation: glitch-load 1.2s ease-in-out infinite;
+}
+@keyframes glitch-load {
+  0% { left: -40%; }
+  50% { left: 100%; }
+  50.01% { left: -40%; }
+  100% { left: 100%; }
+}
+
+/* ============================================================
+   12. SECTION DIVIDERS
+   ============================================================ */
+.divider-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--text-muted), transparent);
+  margin: var(--space-lg) 0;
+}
+.divider-glow {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+  box-shadow: 0 0 8px var(--blue);
+  margin: var(--space-lg) 0;
+}
+.divider-micro {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 4px;
+  color: var(--text-muted);
+  padding: var(--space-sm) 0;
+  border-top: 1px solid var(--text-muted);
+  border-bottom: 1px solid var(--text-muted);
+  margin: var(--space-lg) 0;
+}
+
+/* ============================================================
+   13. UTILITY & GRID DEMO
+   ============================================================ */
+.demo-box {
+  padding: var(--space-lg);
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.bg-base { background: var(--bg-base); }
+.bg-elevated { background: var(--bg-elevated); }
+.bg-surface { background: var(--bg-surface); }
+.bg-panel { background: var(--bg-panel); }
+
+/* ============================================================
+   14. BREADCRUMB / PATH
+   ============================================================ */
+.breadcrumb {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+.breadcrumb a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.breadcrumb a:hover { color: var(--blue); }
+.breadcrumb .sep { color: var(--text-muted); margin: 0 4px; }
+
+/* ============================================================
+   15. TOOLTIP / TAG
+   ============================================================ */
+.tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid var(--text-muted);
+  color: var(--text-secondary);
+}
+.tag.red { border-color: var(--red); color: var(--red); }
+.tag.blue { border-color: var(--blue); color: var(--blue); }
+.tag.green { border-color: var(--success); color: var(--success); }
+
+/* Cart badge */
+.cart-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR NAV -->
+<nav class="sg-nav">
+  <div class="sg-nav-title">RSC Guide</div>
+  <a href="#colors">Colors</a>
+  <a href="#backgrounds">Backgrounds</a>
+  <a href="#typography">Typography</a>
+  <a href="#buttons">Buttons & CTAs</a>
+  <a href="#cards">Cards & Panels</a>
+  <a href="#micrographics">Micrographics</a>
+  <a href="#hud">HUD Elements</a>
+  <a href="#industrial">Industrial Labels</a>
+  <a href="#effects">Effects</a>
+  <a href="#forms">Form Inputs</a>
+  <a href="#loading">Loading States</a>
+  <a href="#dividers">Dividers</a>
+  <a href="#navigation">Navigation</a>
+  <a href="#footer">Footer</a>
+  <a href="#tokens">Design Tokens</a>
+</nav>
+
+<!-- MAIN -->
+<div class="sg-main">
+<div class="sg-container">
+
+<!-- HEADER -->
+<header class="sg-header">
+  <h1>RIFFLE <span>SQUARE</span> CUT</h1>
+  <p>DESIGN SYSTEM & STYLE GUIDE // HIDDEN MARKS™ E-COMMERCE PLATFORM</p>
+</header>
+
+<!-- ============================================================
+     1. COLOR PALETTE
+     ============================================================ -->
+<section class="sg-section" id="colors">
+  <div class="sg-section-label">01 // CHROMATIC SYSTEM</div>
+  <h2 class="sg-section-title">Color Palette</h2>
+  <p class="sg-description">Brand colors derived from Hidden Marks card art. Near-black backgrounds (never pure #000), off-white text (never pure #fff). Neon accents limited to 2-3 per view.</p>
+
+  <span class="sg-label">Brand Colors</span>
+  <div class="color-grid" style="margin-bottom: 32px;">
+    <div class="color-swatch">
+      <div class="color-swatch-block" style="background: #EF3B38;" data-contrast="AA ✓"></div>
+      <div class="color-swatch-info">
+        <div class="color-swatch-name">RSC Red</div>
+        <div class="color-swatch-hex">#EF3B38</div>
+        <div class="color-swatch-role">PRIMARY ACCENT // CTAs, ALERTS, EMPHASIS</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="color-swatch-block" style="background: #4EC8ED;" data-contrast="AA ✓"></div>
+      <div class="color-swatch-info">
+        <div class="color-swatch-name">RSC Blue</div>
+        <div class="color-swatch-hex">#4EC8ED</div>
+        <div class="color-swatch-role">SECONDARY ACCENT // HUD, DATA, LINKS</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="color-swatch-block" style="background: #e0e0e0;" data-contrast="AAA ✓"></div>
+      <div class="color-swatch-info">
+        <div class="color-swatch-name">Off-White</div>
+        <div class="color-swatch-hex">#E0E0E0</div>
+        <div class="color-swatch-role">PRIMARY TEXT // HEADINGS, BODY</div>
+      </div>
+    </div>
+  </div>
+
+  <span class="sg-label">Background Scale</span>
+  <div class="color-grid" style="margin-bottom: 32px;">
+    <div class="color-swatch">
+      <div class="color-swatch-block" style="background: #0a0a0f; border: 1px solid #2a2a35;"></div>
+      <div class="color-swatch-info">
+        <div class="color-swatch-name">Base</div>
+        <div class="color-swatch-hex">#0A0A0F</div>
+        <div class="color-swatch-role">PAGE BACKGROUND</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="color-swatch-block" style="background: #121218; border: 1px solid #2a2a35;"></div>
+      <div class="color-swatch-info">
+        <div class="color-swatch-name">Elevated</div>
+        <div class="color-swatch-hex">#121218</div>
+        <div class="color-swatch-role">CARDS, PANELS</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="color-swatch-block" style="background: #1a1a24; border: 1px solid #2a2a35;"></div>
+      <div class="color-swatch-info">
+        <div class="color-swatch-name">Surface</div>
+        <div class="color-swatch-hex">#1A1A24</div>
+        <div class="color-swatch-role">INPUTS, WELLS</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="color-swatch-block" style="background: #151c3c; border: 1px solid #2a2a35;"></div>
+      <div class="color-swatch-info">
+        <div class="color-swatch-name">Panel</div>
+        <div class="color-swatch-hex">#151C3C</div>
+        <div class="color-swatch-role">FEATURE SECTIONS, HERO</div>
+      </div>
+    </div>
+  </div>
+
+  <span class="sg-label">Functional Colors</span>
+  <div class="color-grid">
+    <div class="color-swatch">
+      <div class="color-swatch-block" style="background: #00FF41;"></div>
+      <div class="color-swatch-info">
+        <div class="color-swatch-name">LED Green</div>
+        <div class="color-swatch-hex">#00FF41</div>
+        <div class="color-swatch-role">SUCCESS, ONLINE STATUS</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="color-swatch-block" style="background: #FFBF00;"></div>
+      <div class="color-swatch-info">
+        <div class="color-swatch-name">Amber</div>
+        <div class="color-swatch-hex">#FFBF00</div>
+        <div class="color-swatch-role">WARNING, PENDING</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="color-swatch-block" style="background: #ff1744;"></div>
+      <div class="color-swatch-info">
+        <div class="color-swatch-name">Danger Red</div>
+        <div class="color-swatch-hex">#FF1744</div>
+        <div class="color-swatch-role">ERROR, CRITICAL ALERTS</div>
+      </div>
+    </div>
+    <div class="color-swatch">
+      <div class="color-swatch-block" style="background: #71797E;"></div>
+      <div class="color-swatch-info">
+        <div class="color-swatch-name">Metal</div>
+        <div class="color-swatch-hex">#71797E</div>
+        <div class="color-swatch-role">SECONDARY TEXT, BORDERS</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     1b. BACKGROUNDS
+     ============================================================ -->
+<section class="sg-section" id="backgrounds">
+  <div class="sg-section-label">01b // SURFACE HIERARCHY</div>
+  <h2 class="sg-section-title">Background Scale</h2>
+  <p class="sg-description">Layered backgrounds create depth without pure black. Higher elevation = lighter shade. Each level represents a different UI layer.</p>
+
+  <div class="sg-row">
+    <div class="sg-col">
+      <div class="demo-box bg-base" style="border: 1px solid var(--text-muted);">var(--bg-base) #0A0A0F</div>
+    </div>
+    <div class="sg-col">
+      <div class="demo-box bg-elevated" style="border: 1px solid var(--text-muted);">var(--bg-elevated) #121218</div>
+    </div>
+    <div class="sg-col">
+      <div class="demo-box bg-surface" style="border: 1px solid var(--text-muted);">var(--bg-surface) #1A1A24</div>
+    </div>
+    <div class="sg-col">
+      <div class="demo-box bg-panel" style="border: 1px solid var(--text-muted);">var(--bg-panel) #151C3C</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     2. TYPOGRAPHY
+     ============================================================ -->
+<section class="sg-section" id="typography">
+  <div class="sg-section-label">02 // TYPOGRAPHIC SYSTEM</div>
+  <h2 class="sg-section-title">Typography</h2>
+  <p class="sg-description">ALL CAPS everywhere. Four font roles: Display (Rajdhani), UI (Barlow Condensed), Body (Inter), Data (JetBrains Mono). Monospace for all prices, codes, and data elements.</p>
+
+  <!-- Display -->
+  <div class="type-specimen" data-font="Rajdhani 700 // Display">
+    <span class="sg-label">Display / Hero — Rajdhani Bold</span>
+    <div class="type-display">HIDDEN MARKS</div>
+    <div class="type-display" style="font-size: 48px; color: var(--red);">THE HUNT BEGINS</div>
+    <div class="type-display" style="font-size: 32px; color: var(--text-secondary);">EVERY CARD HAS A SECRET</div>
+    <div class="type-weight-row">
+      <span style="font-weight: 400;">Regular 400</span>
+      <span style="font-weight: 500;">Medium 500</span>
+      <span style="font-weight: 600;">Semi 600</span>
+      <span style="font-weight: 700;">Bold 700</span>
+    </div>
+  </div>
+
+  <!-- UI -->
+  <div class="type-specimen" data-font="Barlow Condensed 600 // UI">
+    <span class="sg-label">UI / Navigation — Barlow Condensed</span>
+    <div class="type-ui">STORE &nbsp;&nbsp; TUTORIAL &nbsp;&nbsp; BLOG &nbsp;&nbsp; MAP &nbsp;&nbsp; CONTACT</div>
+    <div class="type-ui" style="font-size: 18px; margin-top: 12px; color: var(--text-secondary);">ADD TO CART &nbsp;&nbsp; CHECKOUT &nbsp;&nbsp; VIEW DECK &nbsp;&nbsp; LEARN MORE</div>
+  </div>
+
+  <!-- Body -->
+  <div class="type-specimen" data-font="Inter 400 // Body">
+    <span class="sg-label">Body Text — Inter</span>
+    <div class="type-body">
+      Hidden Marks is a card game set in a world of assassins. Every card in the deck has a secret — a hidden mark that reveals your target. Study the faces. Trust no one. The hunt begins the moment you draw your first card.
+    </div>
+  </div>
+
+  <!-- Mono -->
+  <div class="type-specimen" data-font="JetBrains Mono // Data">
+    <span class="sg-label">Monospace / Data — JetBrains Mono</span>
+    <div class="type-mono" style="color: var(--blue);">$29.99 USD</div>
+    <div class="type-mono" style="color: var(--success);">ORDER #HM-2026-0042</div>
+    <div class="type-mono-sm">
+      SKU: HM-BASE-V1 &nbsp;|&nbsp; QTY: 1 &nbsp;|&nbsp; STATUS: DISPATCHED<br>
+      TRACKING: 1Z999AA10123456784 &nbsp;|&nbsp; ETA: 3-5 DAYS
+    </div>
+    <div style="margin-top: 16px;">
+      <div class="type-mono-sm" style="color: var(--text-muted);">REQUISITION > VERIFICATION > PAYMENT > DISPATCH</div>
+    </div>
+  </div>
+
+  <!-- Micrographic text -->
+  <div class="type-specimen" data-font="JetBrains Mono 7px // Micro">
+    <span class="sg-label">Micrographic Text — Decorative Scale</span>
+    <div class="type-micro">
+      RFL-2026-0042 // BATCH//07A // HIDDEN_MARKS™ // DECK::ALPHA // AUTH::VERIFIED // LOT#HM-0901 // SECURITY_PRINT::ACTIVE // GUILLOCHE_PATTERN_REF::GP-4420 // SERIAL::HM-2026-X0042-A7 // COORD::40.7128°N_74.0060°W // TIMESTAMP::2026-02-25T00:00:00Z // CLASSIFICATION::TOP_SECRET // HIDDEN_MARK_SOCIETY // THE_HUNT_BEGINS // TRUST_NO_ONE // EVERY_CARD_HAS_A_SECRET
+    </div>
+    <div class="type-micro" style="color: rgba(78, 200, 237, 0.15); margin-top: 8px;">
+      SEC//CLEARANCE::LEVEL_7 // OPERATIVE::UNKNOWN // TARGET::CLASSIFIED // MISSION_STATUS::ACTIVE // HANDLER::REDACTED // EXTRACTION_POINT::GRID_REF_4420 // COMMS::DARK // PROTOCOL::SHADOW_OPS // PRIORITY::CRITICAL
+    </div>
+  </div>
+
+  <!-- Type Scale -->
+  <span class="sg-label" style="margin-top: 32px;">Type Scale</span>
+  <div class="type-specimen" data-font="Size Reference">
+    <div class="type-scale">
+      <div class="type-scale-item">
+        <span class="size">72px</span>
+        <span style="font-family: var(--font-display); font-weight: 700; font-size: 72px; text-transform: uppercase; letter-spacing: 3px; line-height: 1;">HERO</span>
+      </div>
+      <div class="type-scale-item">
+        <span class="size">48px</span>
+        <span style="font-family: var(--font-display); font-weight: 700; font-size: 48px; text-transform: uppercase; letter-spacing: 2px; line-height: 1;">SECTION</span>
+      </div>
+      <div class="type-scale-item">
+        <span class="size">36px</span>
+        <span style="font-family: var(--font-display); font-weight: 700; font-size: 36px; text-transform: uppercase; letter-spacing: 2px; line-height: 1;">HEADING</span>
+      </div>
+      <div class="type-scale-item">
+        <span class="size">24px</span>
+        <span style="font-family: var(--font-display); font-weight: 600; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; line-height: 1;">SUBHEAD</span>
+      </div>
+      <div class="type-scale-item">
+        <span class="size">16px</span>
+        <span style="font-family: var(--font-body); font-size: 16px; line-height: 1.7;">Body text at default reading size</span>
+      </div>
+      <div class="type-scale-item">
+        <span class="size">13px</span>
+        <span style="font-family: var(--font-mono); font-size: 13px; color: var(--text-secondary);">MONOSPACE DATA READOUT</span>
+      </div>
+      <div class="type-scale-item">
+        <span class="size">11px</span>
+        <span style="font-family: var(--font-ui); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary);">LABEL / CAPTION</span>
+      </div>
+      <div class="type-scale-item">
+        <span class="size">7px</span>
+        <span style="font-family: var(--font-mono); font-size: 7px; letter-spacing: 2px; color: var(--text-muted);">MICROGRAPHIC DECORATIVE TEXT // HIDDEN DETAIL LAYER</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     3. BUTTONS & CTAs
+     ============================================================ -->
+<section class="sg-section" id="buttons">
+  <div class="sg-section-label">03 // INDUSTRIAL CTAs</div>
+  <h2 class="sg-section-title">Buttons & CTAs</h2>
+  <p class="sg-description">Industrial label style with chamfered corners (clip-path). Primary in RSC Red, secondary in RSC Blue outline. Magnetic + spring hover feel. All text is uppercase.</p>
+
+  <span class="sg-label">Primary Actions</span>
+  <div class="button-grid" style="margin-bottom: 32px;">
+    <button class="btn btn-primary">ADD TO CART</button>
+    <button class="btn btn-primary">BUY NOW</button>
+    <button class="btn btn-primary">ENTER THE HUNT</button>
+  </div>
+
+  <span class="sg-label">Secondary Actions</span>
+  <div class="button-grid" style="margin-bottom: 32px;">
+    <button class="btn btn-secondary">VIEW DECK</button>
+    <button class="btn btn-secondary">LEARN MORE</button>
+    <button class="btn btn-secondary">CONTINUE SHOPPING</button>
+  </div>
+
+  <span class="sg-label">Ghost / Tertiary</span>
+  <div class="button-grid" style="margin-bottom: 32px;">
+    <button class="btn btn-ghost">CANCEL</button>
+    <button class="btn btn-ghost">BACK</button>
+    <button class="btn btn-ghost btn-sm">FILTER</button>
+  </div>
+
+  <span class="sg-label">Small Variants</span>
+  <div class="button-grid" style="margin-bottom: 32px;">
+    <button class="btn btn-primary btn-sm">ADD</button>
+    <button class="btn btn-secondary btn-sm">DETAILS</button>
+    <button class="btn btn-ghost btn-sm">REMOVE</button>
+  </div>
+
+  <span class="sg-label">Hazard / Destructive</span>
+  <div class="button-grid">
+    <button class="btn btn-hazard">⚠ CONFIRM DELETE</button>
+    <button class="btn btn-hazard">⚠ SOLD OUT</button>
+  </div>
+</section>
+
+<!-- ============================================================
+     4. CARDS & PANELS
+     ============================================================ -->
+<section class="sg-section" id="cards">
+  <div class="sg-section-label">04 // STRUCTURAL ELEMENTS</div>
+  <h2 class="sg-section-title">Cards & Panels</h2>
+  <p class="sg-description">Panels as industrial metal plates with corner rivets. Product cards with HUD bracket frames around images. Spring-loaded hover with 3D tilt.</p>
+
+  <span class="sg-label">Product Card</span>
+  <div class="sg-row" style="margin-bottom: 32px;">
+    <div class="product-card">
+      <div class="product-card-image">
+        <div class="card-placeholder">HM</div>
+      </div>
+      <div class="product-card-body">
+        <div class="micro-border">SKU::HM-BASE-V1 // LOT#0042</div>
+        <h3>HIDDEN MARKS</h3>
+        <div class="price"><span class="currency">USD</span> $29.99</div>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <div class="product-card-image" style="background: var(--bg-panel);">
+        <div class="card-placeholder" style="transform: rotate(5deg); border-color: var(--blue);">
+          <span style="color: var(--blue);">HM</span>
+        </div>
+      </div>
+      <div class="product-card-body">
+        <div class="micro-border">SKU::HM-EXP-V1 // LOT#0108</div>
+        <h3>EXPANSION PACK</h3>
+        <div class="price"><span class="currency">USD</span> $14.99 <span style="text-decoration: line-through; color: var(--text-muted); font-size: 13px;">$19.99</span></div>
+      </div>
+    </div>
+  </div>
+
+  <span class="sg-label">Riveted Panel</span>
+  <div class="panel panel-riveted" style="padding: 40px 24px; margin-bottom: 32px;">
+    <div class="rivet-bl"></div>
+    <div class="rivet-br"></div>
+    <div style="font-family: var(--font-display); font-size: 24px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">SYSTEM STATUS</div>
+    <div style="font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);">
+      INVENTORY: 487/500 &nbsp;&nbsp;|&nbsp;&nbsp; ORDERS TODAY: 12 &nbsp;&nbsp;|&nbsp;&nbsp; UPTIME: 99.97%
+    </div>
+  </div>
+
+  <span class="sg-label">HUD Bracket Panel</span>
+  <div class="panel panel-hud" style="padding: 40px; margin-bottom: 32px; background: var(--bg-elevated); display: inline-block;">
+    <div style="font-family: var(--font-display); font-weight: 700; font-size: 20px; text-transform: uppercase; letter-spacing: 1px;">TARGET ACQUIRED</div>
+    <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); margin-top: 4px;">COORD: 40.7128°N, 74.0060°W</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     5. MICROGRAPHICS
+     ============================================================ -->
+<section class="sg-section" id="micrographics">
+  <div class="sg-section-label">05 // CORE FEATURE — HIDDEN DETAIL LAYER</div>
+  <h2 class="sg-section-title">Micrographics</h2>
+  <p class="sg-description">Core feature. Tiny text that reads as texture from a distance but reveals hidden messages, serial numbers, coordinates, and lore up close. Includes easter eggs, secret discount codes, and game lore. Directly reinforces the "hidden marks" brand concept.</p>
+
+  <span class="sg-label">Micro-Text Border</span>
+  <div class="micro-border-demo" style="margin-bottom: 32px;">
+    <div style="padding: 20px 0; font-family: var(--font-display); font-weight: 700; font-size: 28px; text-transform: uppercase; text-align: center; letter-spacing: 2px;">
+      CONTENT FRAMED BY MICROGRAPHIC BORDERS
+    </div>
+  </div>
+
+  <span class="sg-label">Authentication Badges</span>
+  <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px;">
+    <div class="auth-badge">VERIFIED AUTHENTIC <span class="serial">SN: HM-2026-X0042-A7</span></div>
+    <div class="auth-badge">BATCH//07A <span class="serial">LOT: RFL-0901</span></div>
+    <div class="auth-badge">DECK::ALPHA <span class="serial">SET: 001/500</span></div>
+  </div>
+
+  <span class="sg-label">Dense Micro-Text Block (texture layer)</span>
+  <div class="micro-demo" style="margin-bottom: 32px;">
+    <div class="micro-text">
+      RFL-2026-0042 // BATCH//07A // HIDDEN_MARKS™ // DECK::ALPHA // AUTH::VERIFIED // LOT#HM-0901 // SECURITY_PRINT::ACTIVE // GUILLOCHE_PATTERN_REF::GP-4420 // SERIAL::HM-2026-X0042-A7 // COORD::40.7128°N_74.0060°W // TIMESTAMP::2026-02-25T00:00:00Z // CLASSIFICATION::TOP_SECRET // HIDDEN_MARK_SOCIETY // THE_HUNT_BEGINS // TRUST_NO_ONE // EVERY_CARD_HAS_A_SECRET // RFL-2026-0042 // BATCH//07A // HIDDEN_MARKS™ // DECK::ALPHA // AUTH::VERIFIED // LOT#HM-0901
+    </div>
+    <div class="micro-text blue" style="margin-top: 4px;">
+      SEC//CLEARANCE::LEVEL_7 // OPERATIVE::UNKNOWN // TARGET::CLASSIFIED // MISSION_STATUS::ACTIVE // HANDLER::REDACTED // EXTRACTION_POINT::GRID_REF_4420 // COMMS::DARK // PROTOCOL::SHADOW_OPS // PRIORITY::CRITICAL // SEC//CLEARANCE::LEVEL_7 // OPERATIVE::UNKNOWN // TARGET::CLASSIFIED // MISSION_STATUS::ACTIVE
+    </div>
+    <div class="micro-text red" style="margin-top: 4px;">
+      WARNING::UNAUTHORIZED_ACCESS_DETECTED // COUNTERMEASURE::ACTIVE // TRACE_INITIATED // ALERT_LEVEL::MAXIMUM // ALL_OPERATIVES_REPORT // THE_SOCIETY_IS_WATCHING // YOU_HAVE_BEEN_MARKED // THERE_IS_NO_ESCAPE // EVERY_CARD_TELLS_A_STORY
+    </div>
+  </div>
+
+  <span class="sg-label">Breadcrumb as Coordinates</span>
+  <div style="margin-bottom: 32px;">
+    <div class="breadcrumb">
+      <a href="#">ROOT</a> <span class="sep">></span>
+      <a href="#">DECK_ARCHIVE</a> <span class="sep">></span>
+      <a href="#">SET::ALPHA</a> <span class="sep">></span>
+      <span style="color: var(--text-primary);">CARD_042</span>
+    </div>
+  </div>
+
+  <span class="sg-label">Stencil Badges (spray-stencil overlay)</span>
+  <div style="display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 32px;">
+    <div class="stencil-badge">LIMITED EDITION</div>
+    <div class="stencil-badge" style="border-color: var(--text-secondary); color: var(--text-secondary);">SOLD OUT</div>
+    <div class="stencil-badge" style="border-color: var(--success); color: var(--success); transform: rotate(-3deg);">AUTHENTICATED</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     6. HUD ELEMENTS
+     ============================================================ -->
+<section class="sg-section" id="hud">
+  <div class="sg-section-label">06 // INTERFACE OVERLAY SYSTEM</div>
+  <h2 class="sg-section-title">HUD Elements</h2>
+  <p class="sg-description">HUD-style overlay navigation with corner brackets, status indicators, and data readouts. Inspired by Cyberpunk 2077's diegetic UI.</p>
+
+  <span class="sg-label">HUD Bracket Frame</span>
+  <div style="margin-bottom: 32px;">
+    <div class="hud-bracket" style="background: var(--bg-elevated);">
+      <div class="bracket-bl"></div>
+      <div class="bracket-br"></div>
+      <div style="width: 200px; height: 120px; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary);">
+        BRACKETED CONTENT
+      </div>
+    </div>
+  </div>
+
+  <span class="sg-label">Status Indicators</span>
+  <div style="display: flex; flex-wrap: wrap; gap: 24px; margin-bottom: 32px;">
+    <div class="status-indicator"><div class="status-dot green"></div> ONLINE</div>
+    <div class="status-indicator"><div class="status-dot amber"></div> PENDING</div>
+    <div class="status-indicator"><div class="status-dot red"></div> CRITICAL</div>
+    <div class="status-indicator"><div class="status-dot green"></div> IN STOCK: 487</div>
+    <div class="status-indicator"><div class="status-dot amber"></div> LOW STOCK: 12</div>
+    <div class="status-indicator"><div class="status-dot red"></div> OUT OF STOCK</div>
+  </div>
+
+  <span class="sg-label">Tags</span>
+  <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px;">
+    <span class="tag">BASE DECK</span>
+    <span class="tag red">NEW</span>
+    <span class="tag blue">EXPANSION</span>
+    <span class="tag green">IN STOCK</span>
+    <span class="tag">STRATEGY</span>
+    <span class="tag red">LIMITED</span>
+  </div>
+
+  <span class="sg-label">Cart Icon with Badge</span>
+  <div style="margin-bottom: 32px; display: flex; gap: 32px;">
+    <div class="cart-icon">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
+      <div class="cart-badge">3</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     7. INDUSTRIAL LABELS
+     ============================================================ -->
+<section class="sg-section" id="industrial">
+  <div class="sg-section-label">07 // INDUSTRIAL LABEL SYSTEM</div>
+  <h2 class="sg-section-title">Industrial Labels</h2>
+  <p class="sg-description">Labels, warnings, stripes, and instructions — industrial label aesthetics. Not metal infrastructure. Think shipping labels, compliance stickers, hazard markers.</p>
+
+  <span class="sg-label">Label Variants</span>
+  <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px;">
+    <span class="industrial-label caution">⚠ CAUTION: LIMITED STOCK</span>
+    <span class="industrial-label danger">⬡ DANGER: FINAL SALE</span>
+    <span class="industrial-label info">◈ INFO: FREE SHIPPING</span>
+    <span class="industrial-label verified">◆ VERIFIED SELLER</span>
+  </div>
+
+  <span class="sg-label">Warning Stripes</span>
+  <div style="margin-bottom: 32px;">
+    <div class="warning-stripe" style="margin-bottom: 8px;"></div>
+    <div class="warning-stripe red" style="margin-bottom: 8px;"></div>
+    <div style="padding: 16px; border-left: 4px solid var(--hazard-yellow); background: rgba(255, 215, 0, 0.03);">
+      <div style="font-family: var(--font-ui); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--hazard-yellow); margin-bottom: 4px;">⚠ WARNING</div>
+      <div style="font-family: var(--font-body); font-size: 14px; color: var(--text-secondary);">This action cannot be undone. Proceeding will remove all items from your cart.</div>
+    </div>
+  </div>
+
+  <span class="sg-label">Process Flow (Checkout Steps)</span>
+  <div style="display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 1px; margin-bottom: 32px; flex-wrap: wrap;">
+    <span style="color: var(--success); border: 1px solid var(--success); padding: 4px 12px;">✓ REQUISITION</span>
+    <span style="color: var(--text-muted);">→</span>
+    <span style="color: var(--blue); border: 1px solid var(--blue); padding: 4px 12px;">◉ VERIFICATION</span>
+    <span style="color: var(--text-muted);">→</span>
+    <span style="color: var(--text-muted); border: 1px solid var(--text-muted); padding: 4px 12px;">○ PAYMENT</span>
+    <span style="color: var(--text-muted);">→</span>
+    <span style="color: var(--text-muted); border: 1px solid var(--text-muted); padding: 4px 12px;">○ DISPATCH</span>
+  </div>
+</section>
+
+<!-- ============================================================
+     8. EFFECTS
+     ============================================================ -->
+<section class="sg-section" id="effects">
+  <div class="sg-section-label">08 // VISUAL EFFECTS</div>
+  <h2 class="sg-section-title">Effects</h2>
+  <p class="sg-description">Glitch on interactions only. Scanlines at very low opacity. Noise texture overlay for grit. Neon glow for emphasis. All effects respect prefers-reduced-motion.</p>
+
+  <span class="sg-label">Glitch Text (hover/interaction)</span>
+  <div style="padding: 40px; background: var(--bg-elevated); border: 1px solid var(--text-muted); margin-bottom: 32px;">
+    <div class="glitch" data-text="GLITCH EFFECT">GLITCH EFFECT</div>
+  </div>
+
+  <span class="sg-label">Neon Glow Text</span>
+  <div style="padding: 40px; background: var(--bg-base); border: 1px solid var(--text-muted); margin-bottom: 32px;">
+    <div style="font-family: var(--font-display); font-weight: 700; font-size: 36px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 16px;" class="neon-red">DANGER ZONE</div>
+    <div style="font-family: var(--font-display); font-weight: 700; font-size: 36px; text-transform: uppercase; letter-spacing: 3px;" class="neon-blue">SYSTEM ONLINE</div>
+  </div>
+
+  <span class="sg-label">Neon Glow Borders</span>
+  <div class="sg-row" style="margin-bottom: 32px;">
+    <div class="sg-col">
+      <div class="neon-border-red" style="padding: 24px; background: var(--bg-elevated);">
+        <div style="font-family: var(--font-display); font-weight: 700; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">RED GLOW PANEL</div>
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 4px;">ALERT::ACTIVE</div>
+      </div>
+    </div>
+    <div class="sg-col">
+      <div class="neon-border-blue" style="padding: 24px; background: var(--bg-elevated);">
+        <div style="font-family: var(--font-display); font-weight: 700; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">BLUE GLOW PANEL</div>
+        <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 4px;">STATUS::NOMINAL</div>
+      </div>
+    </div>
+  </div>
+
+  <span class="sg-label">Scanline Overlay</span>
+  <div class="scanline-demo" style="margin-bottom: 32px;">
+    <div style="font-family: var(--font-display); font-weight: 700; font-size: 24px; text-transform: uppercase; letter-spacing: 2px;">CONTENT WITH SCANLINES</div>
+    <div style="font-family: var(--font-body); font-size: 14px; color: var(--text-secondary); margin-top: 8px;">Subtle repeating horizontal lines at very low opacity create a CRT/surveillance feel.</div>
+  </div>
+
+  <span class="sg-label">Noise Texture Overlay</span>
+  <div class="noise-demo" style="margin-bottom: 32px;">
+    <div style="font-family: var(--font-display); font-weight: 700; font-size: 24px; text-transform: uppercase; letter-spacing: 2px;">CONTENT WITH NOISE</div>
+    <div style="font-family: var(--font-body); font-size: 14px; color: var(--text-secondary); margin-top: 8px;">SVG-based fractal noise at ~4% opacity adds subtle grit without affecting performance.</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     9. FORM ELEMENTS
+     ============================================================ -->
+<section class="sg-section" id="forms">
+  <div class="sg-section-label">09 // INPUT ELEMENTS</div>
+  <h2 class="sg-section-title">Form Inputs</h2>
+  <p class="sg-description">Themed frame, clean inputs. Industrial label styling on form containers, but inputs themselves are clean and functional for usability.</p>
+
+  <div style="max-width: 500px;">
+    <div class="form-group">
+      <label class="form-label">EMAIL ADDRESS</label>
+      <input class="form-input" type="email" placeholder="operative@hiddenmarks.com">
+      <div class="form-hint">ENTER YOUR REGISTERED EMAIL FOR MAGIC LINK ACCESS</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">PROMO CODE</label>
+      <input class="form-input" type="text" placeholder="SHADOW-OPS-20" value="DARKMARKET" style="color: var(--success);">
+      <div class="form-hint" style="color: var(--success);">✓ CODE ACCEPTED — 20% OFF APPLIED</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">SHIPPING ADDRESS</label>
+      <input class="form-input error" type="text" placeholder="Street address" value="">
+      <div class="form-hint error">⚠ REQUIRED FIELD — ENTER SHIPPING ADDRESS</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">QUANTITY</label>
+      <select class="form-input form-select">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>5</option>
+        <option>10</option>
+      </select>
+    </div>
+
+    <div style="margin-top: 24px; display: flex; gap: 12px;">
+      <button class="btn btn-primary">SUBMIT ORDER</button>
+      <button class="btn btn-ghost">CANCEL</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     10. LOADING STATES
+     ============================================================ -->
+<section class="sg-section" id="loading">
+  <div class="sg-section-label">10 // LOADING & TRANSITIONS</div>
+  <h2 class="sg-section-title">Loading States</h2>
+  <p class="sg-description">Glitch transition mixed with skeleton screens. Skeleton shimmer for content placeholders, glitch loading bar for page transitions.</p>
+
+  <span class="sg-label">Glitch Loading Bar</span>
+  <div style="margin-bottom: 32px;">
+    <div class="glitch-loader"></div>
+  </div>
+
+  <span class="sg-label">Skeleton Content Loader</span>
+  <div style="max-width: 400px; padding: 24px; background: var(--bg-elevated); border: 1px solid var(--text-muted); margin-bottom: 32px;">
+    <div class="skeleton skeleton-block" style="margin-bottom: 16px;"></div>
+    <div class="skeleton skeleton-line w75"></div>
+    <div class="skeleton skeleton-line w90"></div>
+    <div class="skeleton skeleton-line w50"></div>
+  </div>
+
+  <span class="sg-label">Skeleton Product Card</span>
+  <div style="width: 280px; background: var(--bg-elevated); border: 1px solid var(--text-muted);">
+    <div class="skeleton" style="height: 320px;"></div>
+    <div style="padding: 16px; border-top: 1px solid var(--text-muted);">
+      <div class="skeleton skeleton-line w50" style="margin-bottom: 12px; height: 8px;"></div>
+      <div class="skeleton skeleton-line w75" style="height: 16px; margin-bottom: 8px;"></div>
+      <div class="skeleton skeleton-line w50" style="height: 14px;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     11. DIVIDERS
+     ============================================================ -->
+<section class="sg-section" id="dividers">
+  <div class="sg-section-label">11 // SECTION SEPARATORS</div>
+  <h2 class="sg-section-title">Dividers</h2>
+
+  <span class="sg-label">Subtle Line</span>
+  <div class="divider-line"></div>
+
+  <span class="sg-label">Glow Line</span>
+  <div class="divider-glow"></div>
+
+  <span class="sg-label">Micrographic Divider</span>
+  <div class="divider-micro">RFL-2026 // SECTION_BREAK // HIDDEN_MARKS™ // BATCH//07A // CONTINUE_TRANSMISSION</div>
+
+  <span class="sg-label">Warning Stripe Divider</span>
+  <div class="warning-stripe" style="margin: 32px 0;"></div>
+</section>
+
+<!-- ============================================================
+     12. NAVIGATION
+     ============================================================ -->
+<section class="sg-section" id="navigation">
+  <div class="sg-section-label">12 // HUD NAVIGATION</div>
+  <h2 class="sg-section-title">Navigation</h2>
+  <p class="sg-description">HUD-style overlay navigation. Fixed, semi-transparent backdrop with a blue glow scan line across the bottom. Logo with animated cube icon. Status readout on the right.</p>
+
+  <div class="hud-nav-demo">
+    <div class="hud-logo">
+      <div class="cube"></div>
+      RSC
+    </div>
+    <ul class="hud-links">
+      <li><a href="#">STORE</a></li>
+      <li><a href="#">TUTORIAL</a></li>
+      <li><a href="#">BLOG</a></li>
+      <li><a href="#">MAP</a></li>
+      <li><a href="#">CONTACT</a></li>
+    </ul>
+    <div class="hud-status">
+      <div class="dot"></div>
+      SYS::ONLINE
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     13. FOOTER
+     ============================================================ -->
+<section class="sg-section" id="footer">
+  <div class="sg-section-label">13 // TERMINAL FOOTER</div>
+  <h2 class="sg-section-title">Footer</h2>
+  <p class="sg-description">Themed terminal / status bar. Compact, data-dense, always showing system-like information.</p>
+
+  <div class="terminal-footer" style="position: relative;">
+    <div>
+      <span class="prompt">RSC@SYSTEM</span>
+      <span style="color: var(--text-muted);">:</span>
+      <span>~/HIDDEN_MARKS</span>
+      <span style="color: var(--text-muted);"> $ </span>
+      <span style="color: var(--text-secondary);">© 2026 RIFFLE SQUARE CUT</span>
+    </div>
+    <div style="display: flex; gap: 24px;">
+      <span>TERMS</span>
+      <span>PRIVACY</span>
+      <span>SHIPPING</span>
+      <span style="color: var(--success);">SYS::NOMINAL</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     14. DESIGN TOKENS
+     ============================================================ -->
+<section class="sg-section" id="tokens">
+  <div class="sg-section-label">14 // CSS CUSTOM PROPERTIES</div>
+  <h2 class="sg-section-title">Design Tokens</h2>
+  <p class="sg-description">All values as CSS custom properties for consistent implementation. Copy these into :root.</p>
+
+  <div style="background: var(--bg-elevated); border: 1px solid var(--text-muted); padding: 24px; font-family: var(--font-mono); font-size: 12px; line-height: 2; color: var(--text-secondary); white-space: pre; overflow-x: auto;">
+<span style="color: var(--text-muted);">/* Backgrounds */</span>
+<span style="color: var(--blue);">--bg-base</span>: <span style="color: var(--text-primary);">#0a0a0f</span>;
+<span style="color: var(--blue);">--bg-elevated</span>: <span style="color: var(--text-primary);">#121218</span>;
+<span style="color: var(--blue);">--bg-surface</span>: <span style="color: var(--text-primary);">#1a1a24</span>;
+<span style="color: var(--blue);">--bg-panel</span>: <span style="color: var(--text-primary);">#151c3c</span>;
+
+<span style="color: var(--text-muted);">/* Brand */</span>
+<span style="color: var(--blue);">--red</span>: <span style="color: var(--red);">#EF3B38</span>;
+<span style="color: var(--blue);">--blue</span>: <span style="color: var(--blue);">#4EC8ED</span>;
+
+<span style="color: var(--text-muted);">/* Functional */</span>
+<span style="color: var(--blue);">--success</span>: <span style="color: var(--success);">#00FF41</span>;
+<span style="color: var(--blue);">--warning</span>: <span style="color: var(--warning);">#FFBF00</span>;
+<span style="color: var(--blue);">--danger</span>: <span style="color: var(--text-primary);">#ff1744</span>;
+
+<span style="color: var(--text-muted);">/* Text */</span>
+<span style="color: var(--blue);">--text-primary</span>: <span style="color: var(--text-primary);">#e0e0e0</span>;
+<span style="color: var(--blue);">--text-secondary</span>: <span style="color: var(--text-primary);">#71797E</span>;
+<span style="color: var(--blue);">--text-muted</span>: <span style="color: var(--text-primary);">#3a3a48</span>;
+
+<span style="color: var(--text-muted);">/* Fonts */</span>
+<span style="color: var(--blue);">--font-display</span>: <span style="color: var(--text-primary);">'Rajdhani', sans-serif</span>;
+<span style="color: var(--blue);">--font-ui</span>: <span style="color: var(--text-primary);">'Barlow Condensed', sans-serif</span>;
+<span style="color: var(--blue);">--font-body</span>: <span style="color: var(--text-primary);">'Inter', sans-serif</span>;
+<span style="color: var(--blue);">--font-mono</span>: <span style="color: var(--text-primary);">'JetBrains Mono', monospace</span>;
+  </div>
+</section>
+
+</div><!-- /.sg-container -->
+</div><!-- /.sg-main -->
+
+</body>
+</html>

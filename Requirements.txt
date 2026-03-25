@@ -1,0 +1,19 @@
+This will be a site for selling product and running business operations for a company called Riffle Square Cut.
+Right now, the main product offering is a card game called Hidden Marks. It is available for sale
+On the site, the main objective is to get customers to buy the game.
+I also want there to be a blog, an interactive map for shops that carry our game, a tutorial page for teaching the game, and a contact form.
+There should also be a chat bubble on every page that customers can use to get real time help with the game
+Customers should also be able to sign in and see past orders/help requests
+In the sign in page, there should also be an option to sign in as a business or as an employee.
+Businesses have to upload a resale certificate to make an account, but they can purchase in bulk, at discount, with no shipping price, and they can get invoices.
+Employees can sign in, and they can see current orders, current pending help requests, and general stats.
+Employees can also keep track of in person sales, giveaways, inventory, purchases involved with the business, etc.
+There should be a system in place for referrals, giveaways, discount codes, etc.
+I think there should also be a system where every week, a product is given away first come, first serve, by someone with an account that clicks on it first on a special page.
+When a customer or a business purchases from the store, they should get an email with the receipt/invoice. They should also get an email for when they make an account.
+
+The site itself should be modern, with a focus on typography. The style I am imagining is black, red, and white, with micrographics and animations and hud-like elements.
+I want there to be lots of geometric shapes, little details, cool interactions. I feel like we should use game "juice" like elements for interactive features.
+I also want the site to feel fun to play with. I want floating cards in the front page, interactive tutorials for the gameplay, solveable puzzles throughout the site.
+I want the user to be able to look at the game and card in 3d, rotate and look at the card designs. I also want elements of the card designs throughout the site.
+I want the general vibe to be futuristic, dystopian, a little broken down, rusted, textured. I want it to be dark and interactive.

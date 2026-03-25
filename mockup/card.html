@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Card — RSC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --red: #EF3B38;
+  --blue: #4EC8ED;
+  --text-primary: #e0e0e0;
+  --text-secondary: #71797E;
+  --micro: #8a8a95;
+  --border: #e0e0e0;
+  --font-display: 'Rajdhani', sans-serif;
+  --font-ui: 'Barlow Condensed', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --bevel: 28px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   BEVELED BORDER WRAPPER
+   Background = border color, padding = border width.
+   Inner card clips to same shape → gap becomes the border.
+   Bevel on top-right corner only.
+   ============================================================ */
+.card-frame {
+  background: var(--border);
+  padding: 2px;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--bevel)) 0,
+    100% var(--bevel),
+    100% 100%,
+    0 100%
+  );
+}
+
+/* ============================================================
+   PRODUCT CARD
+   ============================================================ */
+.product-card {
+  width: 360px;
+  background: var(--bg);
+  position: relative;
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--bevel)) 0,
+    100% var(--bevel),
+    100% 100%,
+    0 100%
+  );
+}
+
+/* ---- Side dotted gutter: left ---- */
+.product-card .side-left {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 20px;
+  width: 0;
+  border-left: 1px dotted var(--micro);
+  z-index: 5;
+  pointer-events: none;
+}
+.product-card .side-left .side-text {
+  position: absolute;
+  top: 50%;
+  left: -4px;
+  transform: rotate(-90deg) translateX(-50%);
+  transform-origin: 0 0;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 3px;
+  color: var(--micro);
+  white-space: nowrap;
+}
+
+/* ---- Side dotted gutter: right ---- */
+.product-card .side-right {
+  position: absolute;
+  top: var(--bevel);
+  bottom: 0;
+  right: 20px;
+  width: 0;
+  border-right: 1px dotted var(--micro);
+  z-index: 5;
+  pointer-events: none;
+}
+.product-card .side-right .side-text {
+  position: absolute;
+  top: 50%;
+  right: -4px;
+  transform: rotate(90deg) translateX(50%);
+  transform-origin: 100% 0;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 3px;
+  color: var(--micro);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   IMAGE AREA — follows the bevel at top-right
+   ============================================================ */
+.product-card-img {
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  /* Bevel follows the card shape */
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--bevel)) 0,
+    100% var(--bevel),
+    100% 100%,
+    0 100%
+  );
+}
+
+/* HUD corner brackets */
+.product-card-img::before {
+  content: '';
+  position: absolute;
+  top: 14px; left: 32px;
+  width: 24px; height: 24px;
+  border-top: 2px solid var(--blue);
+  border-left: 2px solid var(--blue);
+  z-index: 2;
+}
+.product-card-img::after {
+  content: '';
+  position: absolute;
+  bottom: 14px; right: 32px;
+  width: 24px; height: 24px;
+  border-bottom: 2px solid var(--blue);
+  border-right: 2px solid var(--blue);
+  z-index: 2;
+}
+
+/* Badge */
+.product-badge {
+  position: absolute;
+  top: 14px;
+  right: 46px;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 3px 8px;
+  border: 2px solid var(--red);
+  color: var(--red);
+  background: var(--bg);
+  z-index: 3;
+}
+
+/* Image area micrographic coordinates */
+.img-micro-tl {
+  position: absolute;
+  top: 42px;
+  left: 34px;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: var(--micro);
+  z-index: 2;
+}
+.img-micro-br {
+  position: absolute;
+  bottom: 42px;
+  right: 34px;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: var(--micro);
+  text-align: right;
+  z-index: 2;
+}
+
+/* Card placeholder */
+.card-visual {
+  width: 130px;
+  height: 185px;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+}
+.card-visual .mark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--red);
+}
+.card-visual .serial {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  color: var(--micro);
+  letter-spacing: 1.5px;
+}
+/* Tiny barcode inside card visual */
+.card-visual .card-barcode {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  height: 8px;
+  margin-top: 4px;
+}
+.card-visual .card-barcode span {
+  display: block;
+  height: 100%;
+  background: var(--micro);
+}
+
+/* ============================================================
+   MICROGRAPHIC HORIZONTAL SEPARATOR
+   ============================================================ */
+.micro-sep {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--micro);
+  letter-spacing: 1.5px;
+  overflow: hidden;
+}
+
+/* CSS barcode */
+.barcode {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  flex-shrink: 0;
+}
+.barcode.h24 { height: 24px; }
+.barcode.h14 { height: 14px; }
+.barcode.h10 { height: 10px; }
+.barcode span {
+  display: block;
+  height: 100%;
+  background: var(--micro);
+}
+.barcode .w1 { width: 1px; }
+.barcode .w2 { width: 2px; }
+.barcode .w3 { width: 3px; }
+.barcode .g1 { width: 1px; background: transparent; }
+.barcode .g2 { width: 2px; background: transparent; }
+.barcode .g3 { width: 3px; background: transparent; }
+
+/* QR code */
+.qr {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(7, 1fr);
+  flex-shrink: 0;
+}
+.qr i { display: block; }
+.qr .f { background: var(--micro); }
+.qr .e { background: transparent; }
+
+/* Crosshair */
+.crosshair {
+  width: 12px;
+  height: 12px;
+  position: relative;
+  flex-shrink: 0;
+}
+.crosshair::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  height: 1px;
+  background: var(--micro);
+}
+.crosshair::after {
+  content: '';
+  position: absolute;
+  left: 50%; top: 0; bottom: 0;
+  width: 1px;
+  background: var(--micro);
+}
+
+/* ============================================================
+   BODY
+   ============================================================ */
+.product-card-body {
+  padding: 12px 32px 0 32px;
+}
+.product-card-body h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.product-card-body .desc {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   PRICE AREA
+   ============================================================ */
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 32px;
+}
+.price-row .price {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.price-row .price .cur {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Button */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 10px 18px;
+  border: 2px solid var(--red);
+  background: transparent;
+  color: var(--red);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.btn:hover {
+  background: var(--red);
+  color: #fff;
+}
+
+/* ============================================================
+   BOTTOM MICROGRAPHIC FOOTER — separation via micro elements
+   ============================================================ */
+.micro-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 7px;
+  color: var(--micro);
+  letter-spacing: 1.5px;
+  overflow: hidden;
+}
+.micro-footer .dot-line {
+  flex: 1;
+  border-top: 1px dotted var(--micro);
+}
+</style>
+</head>
+<body>
+
+<div class="card-frame">
+<div class="product-card">
+
+  <!-- Side gutters with dotted lines and vertical micro text -->
+  <div class="side-left">
+    <span class="side-text">HIDDEN_MARKS™ // DECK::ALPHA // RFL-2026 // SEC//PRINT::ACTIVE // CLASSIFIED</span>
+  </div>
+  <div class="side-right">
+    <span class="side-text">AUTH::VERIFIED // LOT#0042 // COORD::40.7128°N // BATCH//07A // SERIAL::HM-X0042</span>
+  </div>
+
+  <!-- Image area -->
+  <div class="product-card-img">
+    <div class="product-badge">NEW</div>
+
+    <!-- Micro details in corners of image area -->
+    <div class="img-micro-tl">40.7128°N 74.0060°W<br>FRAME::001 / CAPTURE::LIVE</div>
+    <div class="img-micro-br">SCAN::ACTIVE<br>RES::2400DPI / AUTH::OK</div>
+
+    <div class="card-visual">
+      <div class="mark">HM</div>
+      <div class="serial">SN::HM-BASE-V1-001</div>
+      <div class="card-barcode">
+        <span class="w2"></span><span class="g1"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g2"></span><span class="w1"></span><span class="g1"></span><span class="w3"></span><span class="g1"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g2"></span><span class="w1"></span><span class="g1"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g1"></span><span class="w3"></span><span class="g2"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Micrographic horizontal separator -->
+  <div class="micro-sep">
+    <div class="barcode h24">
+      <span class="w2"></span><span class="g1"></span><span class="w1"></span><span class="g2"></span><span class="w3"></span><span class="g1"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g2"></span><span class="w1"></span><span class="g1"></span><span class="w3"></span><span class="g1"></span><span class="w2"></span><span class="g1"></span><span class="w1"></span><span class="g2"></span><span class="w1"></span><span class="g1"></span><span class="w3"></span><span class="g2"></span><span class="w2"></span><span class="g1"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g1"></span><span class="w1"></span><span class="g2"></span><span class="w3"></span><span class="g1"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g1"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span>
+    </div>
+    <div class="crosshair"></div>
+    <span>SKU::HM-BASE-V1</span>
+    <span>//</span>
+    <span>LOT#0042</span>
+    <div class="crosshair"></div>
+    <div class="qr">
+      <i class="f"></i><i class="f"></i><i class="f"></i><i class="e"></i><i class="f"></i><i class="f"></i><i class="f"></i>
+      <i class="f"></i><i class="e"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="e"></i><i class="f"></i>
+      <i class="f"></i><i class="e"></i><i class="f"></i><i class="e"></i><i class="f"></i><i class="e"></i><i class="f"></i>
+      <i class="e"></i><i class="f"></i><i class="e"></i><i class="f"></i><i class="e"></i><i class="f"></i><i class="e"></i>
+      <i class="f"></i><i class="e"></i><i class="f"></i><i class="f"></i><i class="f"></i><i class="e"></i><i class="f"></i>
+      <i class="f"></i><i class="e"></i><i class="e"></i><i class="e"></i><i class="f"></i><i class="f"></i><i class="e"></i>
+      <i class="f"></i><i class="f"></i><i class="f"></i><i class="e"></i><i class="f"></i><i class="e"></i><i class="f"></i>
+    </div>
+    <span>AUTH::VERIFIED</span>
+    <div class="barcode h24">
+      <span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g2"></span><span class="w1"></span><span class="g1"></span><span class="w3"></span><span class="g1"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g2"></span><span class="w1"></span><span class="g1"></span><span class="w1"></span>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="product-card-body">
+    <h3>HIDDEN MARKS — BASE DECK</h3>
+    <div class="desc">The original. 50 unique cards. Every mark tells a story. Every secret has a price.</div>
+  </div>
+
+  <!-- Price row -->
+  <div class="price-row">
+    <div class="price"><span class="cur">USD </span>$29.99</div>
+    <button class="btn">ADD TO CART</button>
+  </div>
+
+  <!-- Bottom micrographic footer -->
+  <div class="micro-footer">
+    <div class="barcode h10">
+      <span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g1"></span><span class="w1"></span><span class="g2"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g1"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g2"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span>
+    </div>
+    <div class="dot-line"></div>
+    <span>RFL-2026-0042</span>
+    <span>·</span>
+    <span>HIDDEN_MARKS™</span>
+    <span>·</span>
+    <span>SERIAL::HM-X0042-A7</span>
+    <span>·</span>
+    <span>SEC//PRINT::ACTIVE</span>
+    <div class="dot-line"></div>
+    <div class="barcode h10">
+      <span class="w2"></span><span class="g1"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g2"></span><span class="w1"></span><span class="g1"></span><span class="w1"></span><span class="g1"></span><span class="w2"></span><span class="g1"></span><span class="w1"></span><span class="g2"></span><span class="w2"></span><span class="g1"></span><span class="w1"></span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+</body>
+</html>
